@@ -9,7 +9,7 @@ const errorLogLogin = require('../lib/errorLogLogin');
 //---------------------- Get methods ----------------------\\
 const getUsersController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
 
         const pagingQuery = {
             page: parseInt(req.query.page),
@@ -36,7 +36,7 @@ const getUsersController = async (req, res) => {
 };
 const getUserByIdController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const UserId = req.params.id;
 
         const User = await userBL.getUserById(authUser, UserId);
@@ -57,9 +57,8 @@ const getUserByIdController = async (req, res) => {
 };
 
 const getUsersByIdsController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const userIds = req.body;
 
         const pagingQuery = {
@@ -93,7 +92,7 @@ const getUsersByIdsController = async (req, res) => {
 // ---------------------- Create methods ----------------------\\
 const createUserController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         let newUser = req.body;
 
         // Extract file details
@@ -120,7 +119,7 @@ const createUserController = async (req, res) => {
 
 const createBulkUserController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const newUsers = req.body;
 
         const users = await userBL.createBulkUser(authUser, newUsers);
@@ -143,9 +142,8 @@ const createBulkUserController = async (req, res) => {
 
 // ---------------------- Update methods ----------------------\\
 const updateUserByIdController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const userId = req.params.id;
         const updatableUser = req.body;
 
@@ -167,9 +165,8 @@ const updateUserByIdController = async (req, res) => {
 };
 
 const updateBalkUserController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const updatableUsers = req.body;
 
         const { user, presentIds, absentIds, invalidIds } = await userBL.updateBulkUsers(authUser, updatableUsers);
@@ -194,9 +191,8 @@ const updateBalkUserController = async (req, res) => {
 
 // ---------------------- Delete methods ----------------------\\
 const deleteUserByIdController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const userId = req.params.id;
 
         const deletedUser = await userBL.deleteUserById(authUser, userId);
@@ -217,9 +213,8 @@ const deleteUserByIdController = async (req, res) => {
 };
 
 const deleteBulkUserController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const userIds = req.body;
 
         const { user, presentIds, absentIds, invalidIds } = await userBL.deleteBulkUsers(authUser, userIds);
@@ -246,7 +241,7 @@ const deleteBulkUserController = async (req, res) => {
 // ---------------------- Search methods ----------------------\\
 const searchUserController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const searchTermsForUser = req.body;
 
         const pagingQuery = {
@@ -279,7 +274,6 @@ const registerUserController = async (req, res) => {
     try {
 
         const user = req.body;
-
         // validation
         if (!user) {
             return res.status(400).send({
@@ -313,6 +307,7 @@ const loginUserController = async (req, res) => {
         // const token = createToken(user._id);
         // res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
         const jwtToken = setJwtTokenInCookie(res, user._id);
+
         res.status(200).json({ user: user._id, token: jwtToken });
     }
     catch (err) {
@@ -330,7 +325,7 @@ const loginUserController = async (req, res) => {
 const logoutUserController = async (req, res) => {
     try {
 
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         res.cookie('jwt', '', { maxAge: 1 }); // expires in 1 second regardless of existence
 
         if (authUser) {
@@ -355,7 +350,7 @@ const logoutUserController = async (req, res) => {
 
 const checkUserController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         if (authUser) {
             return res.status(200).send({
                 success: true,

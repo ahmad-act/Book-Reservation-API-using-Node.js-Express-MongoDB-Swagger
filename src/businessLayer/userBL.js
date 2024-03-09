@@ -374,7 +374,7 @@ exports.searchUser = async (authUser, searchTermsForUser, pagingQuery) => {
 
 // Authentication
 exports.registerUser = async (user) => {
-    user.role = 'user';
+    user.roleSerial = 2;
     return await userDL.createUser(user);
 };
 

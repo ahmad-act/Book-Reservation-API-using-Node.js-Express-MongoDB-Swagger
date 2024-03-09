@@ -11,19 +11,94 @@ exports.getBookReservations = async (authUser, pagingQuery) => {
     const thisOperationAccessibilityLevel = 1; // 1 for Admin only
 
     userAccessibilityOperation.checkOperationAccessibilityByRole(authUser.roleSerial, thisOperationAccessibilityLevel, "getBookReservations()");
-    const roleFilter = userAccessibilityOperation.getDataAccessibilityRoleFilter(authUser.roleSerial);
-    const { bookReservations: existingBookReservations, totalBookReservation } = await bookReservationDL.getBookReservations({ reservationAccessLevel: roleFilter }, pagingQuery);
+    // const roleFilter = userAccessibilityOperation.getDataAccessibilityRoleFilter(authUser.roleSerial);
+    // const { bookReservations: existingBookReservations, totalBookReservation } = await bookReservationDL.getBookReservations({ reservationAccessLevel: roleFilter }, pagingQuery);
 
-    // Check if book reservations are null or undefined
-    if (!existingBookReservations || existingBookReservations.length === 0) {
-        const error = new Error();
-        error.status = 404;
-        error.message = "Book reservation not found";
-        error.error = "Book reservation not found or you do not have access to the data";
-        throw error;
-    }
+    // // Check if book reservations are null or undefined
+    // if (!existingBookReservations || existingBookReservations.length === 0) {
+    //     const error = new Error();
+    //     error.status = 404;
+    //     error.message = "Book reservation not found";
+    //     error.error = "Book reservation not found or you do not have access to the data";
+    //     throw error;
+    // }
 
-    return existingBookReservations;
+    const defaultPagingQuery = {
+        page: 1,
+        pageSize: 100,
+        sortBy: 'reservationRef',
+        sortOrder: 1
+    };
+
+    const applyPagingQuery = !pagingQuery || isNaN(pagingQuery.page) || isNaN(pagingQuery.pageSize) || !pagingQuery.sortBy || !pagingQuery.sortOrder || pagingQuery.pageSize < 1 ? defaultPagingQuery : pagingQuery;
+    const startIndex = (applyPagingQuery.page - 1) * applyPagingQuery.pageSize;
+
+
+    return await bookReservationModel.aggregate([
+        {
+            $match: {
+                reservationStatusNum: 1,
+            },
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "userId",
+                foreignField: "_id",
+                as: "userInfo",
+            },
+        },
+        {
+            $unwind: {
+                path: "$userInfo",
+                preserveNullAndEmptyArrays: true, // Preserve documents that don't have a matching category
+            },
+        },
+        {
+            $lookup: {
+                from: "reservationdetails",
+                localField: "_id",
+                foreignField: "bookReservationId",
+                as: "reservationDetails",
+            },
+        },
+        {
+            $project: {
+                _id: 1,
+                reservationRef: 1,
+                userId: 1,
+                reservationStatusNum: 1,
+                reservationDate: 1,
+                reservationAccessLevel: 1,
+                reservationComment: 1,
+                "userInfo.name": 1,
+                "userInfo.email": 1,
+                "userInfo.mobile": 1,
+                reservationDetails: 
+                {
+                    _id: 1,
+                    bookInfoId: 1,
+                    quantity: 1,
+                },
+   
+            },
+        },
+        {
+            $sort: {
+                [defaultPagingQuery.sortBy]: applyPagingQuery.sortOrder === 'desc' ? -1 : 1, // 1 for ascending order, -1 for descending order
+            },
+        },
+        {
+            $skip: startIndex,
+        },
+        {
+            $limit: applyPagingQuery.pageSize,
+        },
+    ])
+
+
+
+    //return existingBookReservations;
 };
 
 exports.getBookReservationById = async (authUser, bookReservationId) => {

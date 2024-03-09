@@ -1,6 +1,21 @@
 const jwt = require('jsonwebtoken');
 
-function decodeJwtToken(jwtToken) {
+function decodeJwtToken(req) {
+    let jwtToken = req.cookies.jwt;
+
+    if (!jwtToken) {
+
+        // Get the Authorization header from the request
+        const authHeader = req.headers['authorization'];
+        if (authHeader) {
+            const token = authHeader.split(' ')[1];
+
+            if (token) {
+                jwtToken = token;
+            }
+        }
+    }
+
     let finalDecodedToken = null;
 
     if (jwtToken) {
@@ -14,10 +29,10 @@ function decodeJwtToken(jwtToken) {
         });
     }
     else {
-        const error = new Error('Token not found');
+        const error = new Error('Token not found222');
         error.status = 401;
-        error.message = 'Please login again';
-        error.error = 'Token not found';
+        error.message = 'Please login again222';
+        error.error = 'Token not found222';
         throw error;
     }
     return finalDecodedToken;

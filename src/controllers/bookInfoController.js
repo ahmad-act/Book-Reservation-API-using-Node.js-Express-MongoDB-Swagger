@@ -6,8 +6,7 @@ const getAuthUser = require('../lib/getAuthUser');
 //---------------------- Get methods ----------------------\\
 const getBookInfosController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
-
+        const authUser = await getAuthUser(req);
         const pagingQuery = {
             page: parseInt(req.query.page),
             pageSize: parseInt(req.query.pageSize),
@@ -34,7 +33,7 @@ const getBookInfosController = async (req, res) => {
 
 const getBookInfoByIdController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const bookInfoId = req.params.id;
 
         const bookInfo = await bookInfoBL.getBookInfoById(authUser, bookInfoId);
@@ -57,7 +56,7 @@ const getBookInfoByIdController = async (req, res) => {
 const getBookInfosByIdsController = async (req, res) => {
 
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const bookInfoIds = req.body;
 
         const pagingQuery = {
@@ -91,7 +90,7 @@ const getBookInfosByIdsController = async (req, res) => {
 // ---------------------- Create methods ----------------------\\
 const createBookInfoController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         let newBookInfo = req.body;
         newBookInfo.coverImage = '';
         
@@ -122,7 +121,7 @@ const createBookInfoController = async (req, res) => {
 
 const createBulkBookInfoController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const newBookInfos = req.body;
 
         const bookInfos = await bookInfoBL.createBulkBookInfo(authUser, newBookInfos);
@@ -145,9 +144,8 @@ const createBulkBookInfoController = async (req, res) => {
 
 // ---------------------- Update methods ----------------------\\
 const updateBookInfoByIdController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const bookInfoId = req.params.id;
         const updatableBookInfo = req.body;
 
@@ -169,9 +167,8 @@ const updateBookInfoByIdController = async (req, res) => {
 };
 
 const updateBalkBookInfoController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const updatableBookInfos = req.body;
 
         const { bookInfo, presentIds, absentIds, invalidIds } = await bookInfoBL.updateBulkBookInfos(authUser, updatableBookInfos);
@@ -196,9 +193,8 @@ const updateBalkBookInfoController = async (req, res) => {
 
 // ---------------------- Delete methods ----------------------\\
 const deleteBookInfoByIdController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const bookInfoId = req.params.id;
 
         const deletedBookInfo = await bookInfoBL.deleteBookInfoById(authUser, bookInfoId);
@@ -219,9 +215,8 @@ const deleteBookInfoByIdController = async (req, res) => {
 };
 
 const deleteBulkBookInfoController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const bookInfoIds = req.body;
 
         const { bookInfo, presentIds, absentIds, invalidIds } = await bookInfoBL.deleteBulkBookInfos(authUser, bookInfoIds);
@@ -247,7 +242,7 @@ const deleteBulkBookInfoController = async (req, res) => {
 // ---------------------- Search methods ----------------------\\
 const searchBookInfoController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const searchTermsForBookInfo = req.body;
 
         const pagingQuery = {

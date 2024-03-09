@@ -14,19 +14,83 @@ exports.getBookInfos = async (authUser, pagingQuery) => {
     // Filter generator
     const roleFilter = userAccessibilityOperation.getDataAccessibilityRoleFilter(authUser.roleSerial);
 
-    // Get data
-    const { bookInfos: existingBookInfos, totalBookInfo } = await bookInfoDL.getBookInfos({ bookInfoAccessLevel: roleFilter }, pagingQuery);
 
-    // Check if book infos are null or undefined
-    if (!existingBookInfos || existingBookInfos.length === 0) {
-        const error = new Error();
-        error.status = 404;
-        error.message = "Book info not found";
-        error.error = "Book info not found or you do not have access to the data";
-        throw error;
-    }
 
-    return existingBookInfos;
+    const defaultPagingQuery = {
+        page: 1,
+        pageSize: 100,
+        sortBy: 'bookInfo.bookTitle',
+        sortOrder: 1
+    };
+
+    const applyPagingQuery = !pagingQuery || isNaN(pagingQuery.page) || isNaN(pagingQuery.pageSize) || !pagingQuery.sortBy || !pagingQuery.sortOrder || pagingQuery.pageSize < 1 ? defaultPagingQuery : pagingQuery;
+    const startIndex = (applyPagingQuery.page - 1) * applyPagingQuery.pageSize;
+    //const sortedQuery = {};
+    //sortedQuery[applyPagingQuery.sortBy] = applyPagingQuery.sortOrder;
+
+    const bookInfos = await bookInfoModel.aggregate([
+        {
+            $lookup: {
+                from: "bookcategories",
+                localField: "bookCategoryId",
+                foreignField: "_id",
+                as: "bookCategory",
+            },
+        },
+        {
+            $unwind: {
+                path: "$bookCategory",
+                preserveNullAndEmptyArrays: true, // Preserve documents that don't have a matching category
+            },
+        },
+        {
+            $project: {
+                bookTitle: 1,
+                stock: 1,
+                bookCategoryId: 1,
+                author: 1,
+                ISBN: 1,
+                publisher: 1,
+                publishDate: 1,
+                language: 1,
+                coverImage: 1,
+                note: 1,
+                "bookCategory.bookCategoryName": 1, // Include the category data in the projection
+            },
+        },
+        // {
+        //     $match: roleFilter,
+        // },
+        {
+            $sort: {
+                [defaultPagingQuery.sortBy]: applyPagingQuery.sortOrder === 'desc' ? -1 : 1, // 1 for ascending order, -1 for descending order
+            },
+        },
+        {
+            $skip: startIndex,
+        },
+        {
+            $limit: applyPagingQuery.pageSize,
+        },
+    ])
+
+
+
+
+    // // Get data
+    // const { bookInfos: existingBookInfos, totalBookInfo } = await bookInfoDL.getBookInfos({ bookInfoAccessLevel: roleFilter }, pagingQuery);
+
+    // // Check if book infos are null or undefined
+    // if (!existingBookInfos || existingBookInfos.length === 0) {
+    //     const error = new Error();
+    //     error.status = 404;
+    //     error.message = "Book info not found";
+    //     error.error = "Book info not found or you do not have access to the data";
+    //     throw error;
+    // }
+
+    const totalBookInfo = await bookInfoModel.countDocuments();
+    return { bookInfos, totalBookInfo };
 };
 
 exports.getBookInfoById = async (authUser, bookInfoId) => {
@@ -59,7 +123,7 @@ exports.getBookInfosByIds = async (authUser, bookInfoIds, pagingQuery) => {
 
     // Access validation
     userAccessibilityOperation.checkOperationAccessibilityByRole(authUser.roleSerial, thisOperationAccessibilityLevel, "deleteBulkBookInfos()");
-    
+
     // Valid and invalid IDs separation
     const { validIds, invalidIds, duplicateIds } = idAndPropertyValidationUtil.separateMongoDbValidAndInvalidIds(bookInfoIds, "book info IDs");
 
@@ -263,7 +327,7 @@ exports.deleteBulkBookInfos = async (authUser, bookInfoIds) => {
 
     // Access validation
     userAccessibilityOperation.checkOperationAccessibilityByRole(authUser.roleSerial, thisOperationAccessibilityLevel, "deleteBulkBookInfos()");
-  
+
     // Valid and invalid IDs separation
     const { validIds, invalidIds, duplicateIds } = idAndPropertyValidationUtil.separateMongoDbValidAndInvalidIds(bookInfoIds, "book info IDs");
 

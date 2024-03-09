@@ -1,11 +1,10 @@
 const userModel = require('../models/userModel');
 const decodeJwtToken = require('./decodeJwtToken');
 
-async function getAuthUser(jwtToken) {
-
-    const decodedToken = decodeJwtToken(jwtToken);
+async function getAuthUser(req) {
+    const decodedToken = decodeJwtToken(req);
     const user = await userModel.findById(decodedToken.userId);
-    
+
     if (!user) {
         const error = new Error();
         error.status = 401;

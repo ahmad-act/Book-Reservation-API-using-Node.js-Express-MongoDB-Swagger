@@ -9,7 +9,7 @@ exports.getBookInfos = async (searchBookInfo, pagingQuery) => {
         sortOrder: 1
     }
 
-    applyPagingQuery = !pagingQuery || isNaN(pagingQuery.page) || isNaN(pagingQuery.pageSize) || !pagingQuery.sortBy || !pagingQuery.sortOrder  || pagingQuery.pageSize < 1 ? defaultPagingQuery : pagingQuery;
+    applyPagingQuery = !pagingQuery || isNaN(pagingQuery.page) || isNaN(pagingQuery.pageSize) || !pagingQuery.sortBy || !pagingQuery.sortOrder || pagingQuery.pageSize < 1 ? defaultPagingQuery : pagingQuery;
 
     const startIndex = (applyPagingQuery.page - 1) * applyPagingQuery.pageSize;
     const sortedQuery = {};
@@ -18,6 +18,7 @@ exports.getBookInfos = async (searchBookInfo, pagingQuery) => {
     const totalBookInfo = await bookInfoModel.countDocuments();
 
     const bookInfos = await bookInfoModel.find(searchBookInfo)
+        //.populate('bookCategoryId')
         .sort(sortedQuery)
         .skip(startIndex)
         .limit(applyPagingQuery.pageSize);

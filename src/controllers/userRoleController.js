@@ -22,7 +22,6 @@ const getUserRolesController = async (req, res) => {
 };
 
 const getUserRoleByIdController = async (req, res) => {
-
     try {
         const userRoleId = req.params.id;
 
@@ -44,7 +43,6 @@ const getUserRoleByIdController = async (req, res) => {
 };
 
 const getUserRolesByIdsController = async (req, res) => {
-
     try {
         const ids = req.body;
 
@@ -116,7 +114,6 @@ const createBulkUserRoleController = async (req, res) => {
 
 // ---------------------- Update methods ----------------------\\
 const updateUserRoleByIdController = async (req, res) => {
-
     try {
         const userRoleId = req.params.id;
         const updateUserRole = req.body;
@@ -139,7 +136,6 @@ const updateUserRoleByIdController = async (req, res) => {
 };
 
 const updateBalkUserRoleController = async (req, res) => {
-
     try {
         const updateUserRoles = req.body;
 
@@ -166,7 +162,6 @@ const updateBalkUserRoleController = async (req, res) => {
 
 // ---------------------- Delete methods ----------------------\\
 const deleteUserRoleByIdController = async (req, res) => {
-
     try {
         const userRoleId = req.params.id;
 
@@ -188,7 +183,6 @@ const deleteUserRoleByIdController = async (req, res) => {
 };
 
 const deleteBulkUserRoleController = async (req, res) => {
-
     try {
         const userRoleIds = req.body;
 

@@ -6,6 +6,7 @@ function setJwtTokenInCookie(response, userId) {
 
     response.cookie('jwt', jwtToken, {
         httpOnly: true,
+        //HostOnly: false,
         maxAge: maxAge, //maxAge in millisecond
         sameSite: 'None',
         secure: true

@@ -6,7 +6,7 @@ const getAuthUser = require('../lib/getAuthUser');
 //---------------------- Get methods ----------------------\\
 const getBookReservationsController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
 
         const pagingQuery = {
             page: parseInt(req.query.page),
@@ -34,7 +34,7 @@ const getBookReservationsController = async (req, res) => {
 
 const getBookReservationByIdController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const bookReservationId = req.params.id;
 
         const bookReservation = await bookReservationBL.getBookReservationById(authUser, bookReservationId);
@@ -58,7 +58,7 @@ const getBookReservationByIdController = async (req, res) => {
 // ---------------------- Create methods ----------------------\\
 const createBookReservationController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const newBookReservation = req.body;
 
         const createdBookReservation = await bookReservationBL.createBookReservation(authUser, newBookReservation);
@@ -81,9 +81,8 @@ const createBookReservationController = async (req, res) => {
 
 // ---------------------- Update methods ----------------------\\
 const updateBookReservationByIdController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const bookReservationId = req.params.id;
         const updatableBookReservation = req.body;
 
@@ -107,9 +106,8 @@ const updateBookReservationByIdController = async (req, res) => {
 
 // ---------------------- Delete methods ----------------------\\
 const deleteBookReservationByIdController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const bookReservationId = req.params.id;
 
         const deletedBookReservation = await bookReservationBL.deleteBookReservationById(authUser, bookReservationId);
@@ -133,7 +131,7 @@ const deleteBookReservationByIdController = async (req, res) => {
 // ---------------------- Search methods ----------------------\\
 const searchBookReservationController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const searchTermsForBookReservation = req.body;
 
         const pagingQuery = {
@@ -164,7 +162,7 @@ const searchBookReservationController = async (req, res) => {
 // ---------------------- Extra methods ----------------------\\
 const getAvailableBookController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
 
         
 
@@ -193,7 +191,7 @@ const getAvailableBookController = async (req, res) => {
 
 const getReservedBookController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
 
         const pagingQuery = {
             page: parseInt(req.query.page),
@@ -202,11 +200,11 @@ const getReservedBookController = async (req, res) => {
             sortOrder: req.query.sortOrder,
         }
 
-        const availableBooks = await bookReservationBL.getReservedBook(authUser, pagingQuery);
+        const reservedBooks = await bookReservationBL.getReservedBook(authUser, pagingQuery);
         res.status(200).send({
             success: true,
             message: "Book reservations retrieved successfully based on the search criteria",
-            availableBooks,
+            reservedBooks,
         });
     } catch (err) {
         const error = errorLog(err.message, err);
@@ -217,6 +215,7 @@ const getReservedBookController = async (req, res) => {
         });
     }
 };
+
 module.exports = {
     getBookReservationsController,
     getBookReservationByIdController,

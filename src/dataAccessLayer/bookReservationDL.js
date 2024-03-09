@@ -132,7 +132,7 @@ exports.deleteBookReservationById = async (bookReservationId) => {
 };
 
 
-// ---------------------- Extra methods ----------------------\\
+// ---------------------- Helper methods ----------------------\\
 exports.getAvailableBook = async (pipeline, pagingQuery) => {
 
 

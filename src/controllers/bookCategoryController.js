@@ -6,7 +6,7 @@ const getAuthUser = require('../lib/getAuthUser');
 //---------------------- Get methods ----------------------\\
 const getBookCategoriesController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
 
         const pagingQuery = {
             page: parseInt(req.query.page),
@@ -34,7 +34,7 @@ const getBookCategoriesController = async (req, res) => {
 
 const getBookCategoryByIdController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const bookCategoryId = req.params.id;
 
         const bookCategory = await bookCategoryBL.getBookCategoryById(authUser, bookCategoryId);
@@ -55,9 +55,8 @@ const getBookCategoryByIdController = async (req, res) => {
 };
 
 const getBookCategoriesByIdsController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const bookCategoryIds = req.body;
 
         const pagingQuery = {
@@ -91,7 +90,7 @@ const getBookCategoriesByIdsController = async (req, res) => {
 // ---------------------- Create methods ----------------------\\
 const createBookCategoryController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const newBookCategory = req.body;
 
         const createdBookCategory = await bookCategoryBL.createBookCategory(authUser, newBookCategory);
@@ -113,7 +112,7 @@ const createBookCategoryController = async (req, res) => {
 
 const createBulkBookCategoryController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const newBookCategories = req.body;
 
         const bookCategories = await bookCategoryBL.createBulkBookCategory(authUser, newBookCategories);
@@ -136,9 +135,8 @@ const createBulkBookCategoryController = async (req, res) => {
 
 // ---------------------- Update methods ----------------------\\
 const updateBookCategoryByIdController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const bookCategoryId = req.params.id;
         const updatableBookCategory = req.body;
 
@@ -160,9 +158,8 @@ const updateBookCategoryByIdController = async (req, res) => {
 };
 
 const updateBalkBookCategoryController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const updatableBookCategories = req.body;
 
         const { bookCategory, presentIds, absentIds, invalidIds } = await bookCategoryBL.updateBulkBookCategories(authUser, updatableBookCategories);
@@ -187,9 +184,8 @@ const updateBalkBookCategoryController = async (req, res) => {
 
 // ---------------------- Delete methods ----------------------\\
 const deleteBookCategoryByIdController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const bookCategoryId = req.params.id;
 
         const deletedBookCategory = await bookCategoryBL.deleteBookCategoryById(authUser, bookCategoryId);
@@ -210,9 +206,8 @@ const deleteBookCategoryByIdController = async (req, res) => {
 };
 
 const deleteBulkBookCategoryController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const bookCategoryIds = req.body;
 
         const { bookCategory, presentIds, absentIds, invalidIds } = await bookCategoryBL.deleteBulkBookCategories(authUser, bookCategoryIds);
@@ -238,7 +233,7 @@ const deleteBulkBookCategoryController = async (req, res) => {
 // ---------------------- Search methods ----------------------\\
 const searchBookCategoryController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const searchTermsForBookCategory = req.body;
 
         const pagingQuery = {

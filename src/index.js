@@ -2,6 +2,7 @@ require('dotenv').config();
 const packageJson = require('../package.json');
 const messageLog = require('./lib/messageLog');
 const express = require('express')
+const cors = require('cors');
 const connectDB = require('./lib/dbConnection');
 const swagger = require('./lib/swagger');
 const cookieParser = require('cookie-parser');
@@ -15,6 +16,14 @@ const { checkUser } = require('./middlewares/authMiddleware');
 connectDB();
 
 const app = express()
+
+// Enable CORS for all routes
+app.use(cors());
+
+// app.use(cors({
+//     origin: 'http://example.com' // Allow requests only from http://example.com
+// }));
+
 
 app.use(express.json());
 app.use(cookieParser());

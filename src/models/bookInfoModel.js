@@ -22,6 +22,7 @@ const bookInfoSchema = new mongoose.Schema(
         },
         bookCategoryId: {
             type: mongoose.Schema.Types.ObjectId,
+            ref: 'bookCategory',
         },
         author: {
             type: String,

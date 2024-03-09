@@ -6,7 +6,7 @@ const getAuthUser = require('../lib/getAuthUser');
 //---------------------- Get methods ----------------------\\
 const getDetailTablesController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
 
         const pagingQuery = {
             page: parseInt(req.query.page),
@@ -34,7 +34,7 @@ const getDetailTablesController = async (req, res) => {
 
 const getDetailTableByIdController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const detailTableId = req.params.id;
 
         const detailTable = await detailTableBL.getDetailTableById(authUser, detailTableId);
@@ -55,9 +55,8 @@ const getDetailTableByIdController = async (req, res) => {
 };
 
 const getDetailTablesByIdsController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const detailTableIds = req.body;
 
         const pagingQuery = {
@@ -91,7 +90,7 @@ const getDetailTablesByIdsController = async (req, res) => {
 // ---------------------- Create methods ----------------------\\
 const createDetailTableController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const newDetailTable = req.body;
 
         const createdDetailTable = await detailTableBL.createDetailTable(authUser, newDetailTable);
@@ -113,7 +112,7 @@ const createDetailTableController = async (req, res) => {
 
 const createBulkDetailTableController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const newDetailTables = req.body;
 
         const detailTables = await detailTableBL.createBulkDetailTable(authUser, newDetailTables);
@@ -137,9 +136,8 @@ const createBulkDetailTableController = async (req, res) => {
 
 // ---------------------- Update methods ----------------------\\
 const updateDetailTableByIdController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const detailTableId = req.params.id;
         const updatableDetailTable = req.body;
 
@@ -161,9 +159,8 @@ const updateDetailTableByIdController = async (req, res) => {
 };
 
 const updateBalkDetailTableController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const updatableDetailTables = req.body;
 
         const { detailTable, presentIds, absentIds, invalidIds } = await detailTableBL.updateBulkDetailTables(authUser, updatableDetailTables);
@@ -191,9 +188,8 @@ const updateBalkDetailTableController = async (req, res) => {
 
 // ---------------------- Delete methods ----------------------\\
 const deleteDetailTableByIdController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const detailTableId = req.params.id;
 
         const deletedDetailTable = await detailTableBL.deleteDetailTableById(authUser, detailTableId);
@@ -214,9 +210,8 @@ const deleteDetailTableByIdController = async (req, res) => {
 };
 
 const deleteBulkDetailTableController = async (req, res) => {
-
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const detailTableIds = req.body;
 
         const { detailTable, presentIds, absentIds, invalidIds } = await detailTableBL.deleteBulkDetailTables(authUser, detailTableIds);
@@ -242,7 +237,7 @@ const deleteBulkDetailTableController = async (req, res) => {
 // ---------------------- Search methods ----------------------\\
 const searchDetailTableController = async (req, res) => {
     try {
-        const authUser = await getAuthUser(req.cookies.jwt);
+        const authUser = await getAuthUser(req);
         const searchTermsForDetailTable = req.body;
 
         const pagingQuery = {
