@@ -1,5 +1,5 @@
 # Book Reservation API
-[![Outlook](https://img.shields.io/badge/Outlook-0078D4?style=for-the-badge&logo=microsoft-outlook&logoColor=white)](mailto:engzaman2020@outlook.com) [![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ahmad-awsaf-uz-zaman/) [![Live Link](https://img.shields.io/badge/Live%20Link-Book%20Reservation%20Api-blue?style=for-the-badge)](https://book-reservation-api.onrender.com/v1/api-docs/)
+[![Outlook](https://img.shields.io/badge/Outlook-0078D4?style=for-the-badge&logo=microsoft-outlook&logoColor=white)](mailto:engzaman2020@outlook.com) [![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ahmad-awsaf-uz-zaman/) [![Live Link](https://img.shields.io/badge/Live%20Link-Book%20Reservation%20Api-blue?style=for-the-badge)](https://book-reservation-api-u5zc.onrender.com)
 
 
 <!-- TABLE OF CONTENTS -->
