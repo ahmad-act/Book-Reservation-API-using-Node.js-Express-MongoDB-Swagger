@@ -29,10 +29,10 @@ function decodeJwtToken(req) {
         });
     }
     else {
-        const error = new Error('Token not found222');
+        const error = new Error('Token not found');
         error.status = 401;
-        error.message = 'Please login again222';
-        error.error = 'Token not found222';
+        error.message = 'Please login again';
+        error.error = 'Token not found';
         throw error;
     }
     return finalDecodedToken;
